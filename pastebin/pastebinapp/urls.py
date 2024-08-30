@@ -1,6 +1,14 @@
 from django.urls import path
+from rest_framework.routers import SimpleRouter
+
 from . import views
+
+route = SimpleRouter()
+
+route.register('api', views.PastebinViewset)
+
 urlpatterns = [
-    path("pastebin", views.create_pastebin),
 ]
+
+urlpatterns += route.urls
 
