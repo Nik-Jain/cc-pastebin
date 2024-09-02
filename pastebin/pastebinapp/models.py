@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import datetime, timedelta
 
 # Create your models here.
 
@@ -22,7 +23,9 @@ class PasteBin(models.Model):
         choices=ExpirationChoices.choices,
         default=ExpirationChoices.never
         )
+    hit_count = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
+    expire_at = models.DateTimeField(default=datetime.now() + timedelta(days=36500))
 
     class Meta:
         managed=True
