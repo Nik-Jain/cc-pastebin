@@ -12,6 +12,8 @@ class PasteBinSerializer(serializers.ModelSerializer):
         validated_data['hash_code'] = hash_code
         paste_expiration = validated_data['paste_expiration']
         validated_data['expire_at'] = get_expriration_time(paste_expiration)
+        if not validated_data.get('title'):
+            validated_data['title'] = validated_data.get('input_text', '')[:60]
         return super().create(validated_data)
     
     class Meta:
