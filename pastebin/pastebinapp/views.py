@@ -11,6 +11,13 @@ class PastebinViewset(viewsets.ModelViewSet):
     queryset = PasteBin.objects.all()
     lookup_field = 'hash_code'
 
+    def get_queryset(self):
+        paste_exposure = self.request.query_params.get('unlisted')
+        if paste_exposure and paste_exposure == 'true':
+            return self.queryset.filter(paste_exposure='public')
+
+        return super().get_queryset()
+    
     def retrieve(self, request, *args, **kwargs):
         
         hash_code = kwargs['hash_code']

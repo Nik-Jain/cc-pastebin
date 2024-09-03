@@ -16,6 +16,11 @@ class PasteBin(models.Model):
         month_6 = "6M", "6 Month"
         year_1 = "1Y", "1 Year"
     
+    class PasteExposureChoices(models.TextChoices):
+        public = 'public', 'Public'
+        unlisted = 'unlisted', 'Unlisted'
+    
+    title = models.CharField(max_length=60, blank=True)
     hash_code = models.CharField(max_length=8)
     input_text = models.TextField(blank=False)
     paste_expiration = models.CharField(
@@ -23,6 +28,11 @@ class PasteBin(models.Model):
         choices=ExpirationChoices.choices,
         default=ExpirationChoices.never
         )
+    paste_exposure = models.CharField(
+        max_length=8,
+        choices=PasteExposureChoices.choices,
+        default=PasteExposureChoices.public
+    )
     hit_count = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     expire_at = models.DateTimeField(default=datetime.now() + timedelta(days=36500))
