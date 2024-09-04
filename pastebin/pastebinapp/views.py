@@ -18,6 +18,16 @@ class PastebinViewset(viewsets.ModelViewSet):
 
         return super().get_queryset()
     
+    def create(self, request, *args, **kwargs):
+        if request.data['is_password_protected']:
+            data = request.data.copy()
+            serializer = PasteBinSerializer(data=data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=201)
+            return Response(serializer.errors, status=400)
+        return super().create(request, *args, **kwargs)
+    
     def retrieve(self, request, *args, **kwargs):
         
         hash_code = kwargs['hash_code']

@@ -34,6 +34,8 @@ class PasteBin(models.Model):
         default=PasteExposureChoices.public
     )
     hit_count = models.IntegerField(default=0)
+    is_password_protected  = models.BooleanField(default=False)
+    password_hash = models.CharField(max_length=60,null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     expire_at = models.DateTimeField(default=datetime.now() + timedelta(days=36500))
 
