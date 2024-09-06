@@ -35,6 +35,5 @@ class PasteBinSerializer(serializers.ModelSerializer):
     
     class Meta:
         model =  PasteBin
-        # fields = '__all__'
         read_only_fields = ['hash_code', 'expire_at', 'hit_count']
         exclude = ['password_hash',]
