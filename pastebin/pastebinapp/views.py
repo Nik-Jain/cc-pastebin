@@ -20,7 +20,7 @@ class PastebinViewset(viewsets.ModelViewSet):
         return super().get_queryset()
     
     def create(self, request, *args, **kwargs):
-        if request.data['is_password_protected']:
+        if request.data.get('is_password_protected'):
             data = request.data.copy()
             serializer = PasteBinSerializer(data=data)
             if serializer.is_valid():
@@ -48,9 +48,12 @@ class PastebinViewset(viewsets.ModelViewSet):
             record.delete()
             raise NotFound()
         
-        if not (record.is_password_protected and check_password(request.data.get('password'), record.password_hash)):
-            raise exceptions.AuthenticationFailed()          
-
+        if record.is_password_protected:
+            if request.data:
+                if not check_password(request.data.get('password'), record.password_hash):
+                    raise exceptions.AuthenticationFailed()  
+            else:
+                raise exceptions.NotAcceptable('"Password": "Provide password to access password protected pastes."')
         record.hit_count += 1
         record.save()
         return super().retrieve(request, *args, **kwargs)
